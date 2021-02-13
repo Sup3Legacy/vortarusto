@@ -29,7 +29,7 @@ impl Node {
 }
 
 impl fmt::Display for Node {
-    fn fmt(&self, f : &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut temp_array = Vec::new();
         for i in 0..N {
             if let Some(node) = &self.next[i] {
@@ -66,15 +66,26 @@ impl SuffixTree {
         }
         current.terminal = true;
     }
-    pub fn delete_word(&mut self, word : Vec<u8>) {
+    pub fn delete_word(&mut self, word: Vec<u8>) {
         let n = word.len();
         let mut current = &mut self.root;
         for i in 0..n {
-            if let None = current.next[word[i] as usize] {
-                return
+            if let None = current.next[word[i] as usize - 97] {
+                return;
             }
-            current = current.next[word[i] as usize].as_mut().unwrap();
+            current = current.next[word[i] as usize - 97].as_mut().unwrap();
         }
         current.terminal = false;
+    }
+    pub fn contains_word(&self, word: Vec<u8>) -> bool {
+        let n = word.len();
+        let mut current = &self.root;
+        for i in 0..n {
+            if let None = current.next[word[i] as usize - 97] {
+                return false;
+            }
+            current = current.next[word[i] as usize - 97].as_ref().unwrap();
+        }
+        current.terminal
     }
 }
